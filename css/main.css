@@ -1,0 +1,190 @@
+
+/*custom font*/
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: montserrat, arial, verdana;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.hidden {
+  display: none;
+}
+
+.showDiv {
+  display: block;
+}
+
+.margin-10L {
+  margin-left: 10px;
+}
+
+.margin-20L {
+  margin-left: 20px;
+}
+
+.width-184px{
+  width: 184px;
+}
+
+.width-227px{
+  width: 227px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.btn .caret {
+  color: #55b776;
+  margin-left: 0; 
+  margin-top: 8px; 
+  float: right;
+}
+
+.container .dropdown-menu {
+    position: static;
+    float: none;
+}
+
+input.ng-invalid {
+  border-color:red;
+}
+input.ng-valid {
+  border-color:none;
+}
+
+body {
+  background: transparent;
+}
+
+.progressbar {
+    counter-reset: step;
+}
+
+
+.progressbar li {
+  margin: auto;
+  list-style-type: none;
+  width:25%;
+  float: left;
+  font-size: 12px;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  color: #7d7d7d;
+
+}
+.progressbar li:before {
+  width: 30px;
+  height: 30px;
+  content: counter(step);
+  counter-increment: step;
+  line-height: 30px;
+  border: 2px solid #7d7d7d;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.progressbar li:first-child:after {
+    content: none;
+}
+.progressbar li.active {
+    color: green;
+}
+.progressbar li.active:before {
+    border-color: #55b776;
+}
+
+.header {
+  background-image: url('../img/bg-main.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  color: #ffffff;
+  min-width:100%;
+  /*min-height:100%;*/
+}
+
+.header img {
+  width: 100%;
+  opacity: 0.5;
+}
+
+.header h1 {
+  margin-top: 200px;
+  padding: 0;
+  font-size: 5em;
+}
+
+.required {
+  color: #EB1844;
+  font-weight: bold;
+  content: "";
+}
+
+#registrationForm {
+  padding: 20px;
+}
+
+.thumbnail img {
+  width: 150px;
+  height: 108px;
+}
+
+#myModal .modal-content
+{
+  height:400px;
+  overflow:auto;
+}
+
+.btn-decorate {
+  width: 85px;
+  height: 42px;
+}
+
+#footerwrap {
+    padding-top: 70px;
+    background-color: #556175;
+}
+
+#footerwrap p {
+    color: #ffffff;
+    margin-left: 10px;
+}
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    padding-top: 25px;
+    margin: 10px;
+}
+.dragover {
+    border: 5px dashed blue;
+}
+
+form .progress {
+    line-height: 15px;
+}
+
+.progress {
+    display: inline-block;
+    width: 100px;
+    border: 3px groove #CCC;
+}
+.progress div {
+    font-size: smaller;
+    background: orange;
+    width: 0;
+}
