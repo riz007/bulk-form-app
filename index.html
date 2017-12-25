@@ -5,18 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Online Bank Account</title>
+    <title>User Bulk Upload</title>
 
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-    <style>
-
-  
-    </style>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="vendor/intl-tel-input/css/intlTelInput.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
+    <link href="js/jquery-ui-1.12.1.custom/jquery-ui.min.css" rel="stylesheet">
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,19 +24,172 @@
     <![endif]-->
 
     <!-- Google map -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvz2GxNTf8c9SWbKr6xkPC78FhIgNMk8Y&libraries=places"
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvz2GxNTf8c9SWbKr6xkPC78FhIgNMk8Y&libraries=places"
     async defer></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
     <!-- angularjs -->
-    <script src="js/angular.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <!-- controller -->
-    <script src="js/controller.js"></script>
-    <script src="vendor/intl-tel-input/js/intlTelInput.min.js"></script>
-    <script src="vendor/ng-file-upload.min.js"></script>
-    <script src="vendor/ng-file-upload-shim.min.js"></script>
+    <script type="text/javascript" src="js/controller.js"></script>
+    <script type="text/javascript" src="vendor/intl-tel-input/js/intlTelInput.min.js"></script>
+    <script type="text/javascript" src="vendor/ng-file-upload.min.js"></script>
+    <script type="text/javascript" src="vendor/ng-file-upload-shim.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
 
   </head>
   <body>
+    <div class="header">
+      <div class="container text-center" ng-if="step != 3">
+        <h1>ABC Invoice System</h1>
+        <p>This is the online application to store your invoice records.</p>
+        <p><a class="btn btn-primary btn-lg" href="#invoiceForm" role="button">Scroll Down</a></p>
+      </div>
+
+      <div class="container text-center" ng-if="step == 3">
+        <h1>ABC Bank Ltd.</h1>
+        <p>Thank you for your submission.</p>
+      </div>
+    </div>
+
+    <div class="container">
+        <form id="invoiceForm" class="form-horizontal" name="invoiceForm" novalidate="">
+            <div class="form-group" ng-class="step === 1 ? 'content-step step1' : 'content-step step1 hide'">
+              <div class="text-center">
+                <h1>Invoice Application Form</h1>
+                <p>Please fill all the required fields carefully.</p>
+              </div><br />
+
+              <div class="form-group">
+                  <label class="col-xs-3 control-label"><span class="required">*</span>Invoice Number</label>
+                  <div class="col-xs-6" ng-class="{ 'has-error' : invoiceForm.invNo.$invalid && !invoiceForm.invNo.$pristine }">
+                      <input type="text" class="form-control" name="invNo" ng-model="invNo" placeholder="Invoice No." required="true"  />
+                  </div>
+                  <span ng-show="invoiceForm.invNo.$invalid && !invoiceForm.invNo.$pristine" class="required-text">Invoice No. is required.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-3 control-label"><span class="required">*</span>Invoice Date</label>
+                  <div class="col-xs-6" ng-class="{ 'has-error' : invoiceForm.invDate.$invalid && !invoiceForm.invDate.$pristine }">
+                      <input type="text" id="datepicker" class="form-control" name="invDate" ng-model="invDate" placeholder="Invoice Date" required="true" />
+                  </div>
+                  <span ng-show="invoiceForm.invDate.$invalid && !invoiceForm.invDate.$pristine" class="required-text">Invoice Date is required.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-3 control-label"><span class="required">*</span>Invoice Amount</label>
+                  <div class="col-xs-6" ng-class="{ 'has-error' : invoiceForm.invAmt.$invalid && !invoiceForm.invAmt.$pristine }">
+                      <input type="number" class="form-control" name="invAmt" placeholder="Invoice Amount" ng-model="invAmt" required="true" />
+
+                    Default currency symbol (฿): <span id="currency-default">{{invAmt | currency: "฿"}}</span><br>
+                  </div>
+                
+                  <span ng-show="invoiceForm.invAmt.$invalid && !invoiceForm.invAmt.$pristine" class="required-text">Invoice Amount is required.</span>
+              </div>
+
+
+              <div class="form-group">
+                  <label class="col-xs-3 control-label">Customer No.</label>
+                  <div class="col-xs-6" ng-class="{ 'has-error' : invoiceForm.custNum.$invalid && !invoiceForm.custNum.$pristine }">
+                      <input type="text" class="form-control" name="custNum" ng-model="custNum" />
+                  </div>
+                  <span ng-show="invoiceForm.custNum.$invalid && !invoiceForm.custNum.$pristine" class="required-text">Customer is required.</span>
+              </div>
+
+              <div class="form-group">
+                  <label class="col-xs-3 control-label"><span class="required">*</span>Customer's Country</label>
+                  <div class="col-xs-12 col-sm-6 col-md-4">
+                      <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle width-184px" type="button" data-toggle="dropdown">{{selectedCountry.name}}
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu scrollable-menu">
+                          <li ng-repeat="country in countryList"><a href="javascript:void(0)" ng-click="changeClickCountry(country)">{{country.name}}</a></li>
+                        </ul>
+                      </div>
+                  </div>
+                  <div id="moneyAlert" class="hide" role="alert">
+                    <p class="required-text">Item name is required.</p>
+                  </div>
+              </div>
+
+              <!-- Products Information -->
+              <div class="form-group">
+                  <label class="col-xs-3 control-label"><span class="required">*</span>Specific Products?</label>
+                  <div class="col-xs-12 col-sm-6 col-md-4">
+                      <div class="radio">
+                          <label>
+                              <input type="radio" name="radio2" ng-model="radio2" ng-value="0" /> Yes
+                          </label>
+                      </div>
+                      <div class="radio">
+                          <label>
+                              <input type="radio" name="radio2" ng-model="radio2" ng-value="1" /> No
+                          </label>
+                      </div>
+                  </div>
+              </div><br />
+
+              <!-- Item names -->
+              <div class="form-group">
+                  <label class="col-xs-3 control-label"><span class="required">*</span>Item name</label>
+                  <div class="col-xs-12 col-sm-6 col-md-4">
+                      <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle width-184px" type="button" data-toggle="dropdown" ng-disabled="radio2 != 0">{{selectedItem.value}}
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                          <li ng-repeat="item in getItem"><a href="javascript:void(0)" ng-click="changeClickItem(item)">{{item.value}}</a></li>
+                        </ul>
+                      </div>
+                  </div>
+                  <div id="moneyAlert" class="hide" role="alert">
+                    <p class="required-text">Item name is required.</p>
+                  </div>
+              </div><br />
+              <!-- Item cost -->
+             <div class="form-group">
+                  <label class="col-xs-3 control-label"><span class="required">*</span>Item cost</label>
+                  <div class="col-xs-6" ng-class="{ 'has-error' : invoiceForm.itemCost.$invalid && !invoiceForm.itemCost.$pristine }">
+                      <input type="text" class="form-control" name="itemCost" ng-model="itemCost" placeholder="Item cost" required="true" ng-disabled="radio2 != 0"  />
+                  </div>
+                  <span ng-show="invoiceForm.itemCost.$invalid && !invoiceForm.itemCost.$pristine" class="required-text">Invoice cost is required.</span>
+              </div>
+
+              <div class="form-group">
+                  <div class="pull-right">
+                      <button class="btn btn-primary btn-decorate" name="save" value="Save" ng-click="saveData()" ng-disabled='invoiceForm.$invalid'>Save</button>
+                      <button class="btn btn-success btn-decorate margin-10L" name="next" value="upload" ng-click="clickUpload()" ng-disabled='invoiceForm.$invalid'>Upload</button>
+                  </div>
+              </div>
+            </div>
+        </form>
+    </div>
+
+  </body>
+
+  <script>
+    $(document).ready(function() {
+        $("#datepicker").datepicker({ maxDate: new Date, minDate: new Date(2017, 05, 25) });
+    });
+
+    // Scrolls to the selected menu item on the page
+    $(function() {
+      $('a[href*=\\#]:not([href=\\#])').click(function() {
+          if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+
+              var target = $(this.hash);
+              target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+              if (target.length) {
+                  $('html,body').animate({
+                      scrollTop: target.offset().top
+                  }, 300);
+                  return false;
+              }
+          }
+      });
+    });
+  </script>
+
+  </html>

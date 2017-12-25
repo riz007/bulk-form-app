@@ -52,60 +52,24 @@ html, body {
     float: none;
 }
 
-input.ng-invalid {
+.required-input {
   border-color:red;
 }
-input.ng-valid {
-  border-color:none;
+.has-error {
+  color: red;
+}
+
+.required-text {
+  color: red;
 }
 
 body {
   background: transparent;
 }
 
-.progressbar {
-    counter-reset: step;
-}
-
-
-.progressbar li {
-  margin: auto;
-  list-style-type: none;
-  width:25%;
-  float: left;
-  font-size: 12px;
-  position: relative;
-  text-align: center;
-  text-transform: uppercase;
-  color: #7d7d7d;
-
-}
-.progressbar li:before {
-  width: 30px;
-  height: 30px;
-  content: counter(step);
-  counter-increment: step;
-  line-height: 30px;
-  border: 2px solid #7d7d7d;
-  display: block;
-  text-align: center;
-  margin: 0 auto 10px auto;
-  border-radius: 50%;
-  background-color: white;
-}
-
-.progressbar li:first-child:after {
-    content: none;
-}
-.progressbar li.active {
-    color: green;
-}
-.progressbar li.active:before {
-    border-color: #55b776;
-}
 
 .header {
-  background-image: url('../img/bg-main.jpg');
+  background-image: url('../img/bg2.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -146,9 +110,29 @@ body {
   overflow:auto;
 }
 
+.scrollable-menu {
+  height: auto;
+  max-height: 200px;
+  overflow-x: hidden;
+}
+
 .btn-decorate {
   width: 85px;
   height: 42px;
+}
+
+.uploadBtn {
+  border-radius: 0 !important;
+  width: 145px;
+  height: 35px;
+  text-align: center;
+  border: 2px solid #55b776 !important;
+  margin:auto;
+  display:block;
+  color: #55b776 !important;
+  margin-top: 15px;
+  margin-bottom: 35px;
+  font-size: 14px;
 }
 
 #footerwrap {
@@ -164,14 +148,14 @@ body {
 .drop-box {
     background: #F8F8F8;
     border: 5px dashed #DDD;
-    width: 200px;
-    height: 200px;
+    max-width: 100%;
+    max-height: auto;
     text-align: center;
     padding-top: 25px;
     margin: 10px;
 }
 .dragover {
-    border: 5px dashed blue;
+    border: 5px dashed #286090;
 }
 
 form .progress {
@@ -181,10 +165,13 @@ form .progress {
 .progress {
     display: inline-block;
     width: 100px;
-    border: 3px groove #CCC;
+    height: auto;
+    border: 2px solid #55b776 !important;
 }
 .progress div {
-    font-size: smaller;
-    background: orange;
-    width: 0;
+    text-align: center;
+    font-size: 14px;
+    background: #55b776;
+    /*width: 0;*/
 }
+

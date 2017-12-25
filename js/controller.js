@@ -1,61 +1,29 @@
-var app = angular.module('bankApp', ['ngFileUpload']);
+var app = angular.module('bulkApp', ['ngFileUpload']);
 
-app.controller('bankCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upload, $timeout) {
+app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upload, $timeout) {
 
-  $scope.step = 2;
+  $scope.step = 1;
 
-  // Initialize every scopes here
-  $scope.fName = "";
-  $scope.midName = "";
-  $scope.lastName = "";
-  $scope.homePhone;
-  $scope.mobilePhone;
-  $scope.email;
-  $scope.streetNumber;
-  $scope.routeAddress;
-  $scope.locality;
-  $scope.state;
-  $scope.zipCode;
-  $scope.country;
-  $scope.socialSecNum;
-  $scope.empName;
-  $scope.empAddress;
-  $scope.streetNumber2;
-  $scope.routeAddress2;
-  $scope.locality2;
-  $scope.state2;
-  $scope.zipCode2;
-  $scope.country2;
-  $scope.mobilePhone2;
-  $scope.savings;
-  $scope.deposit;
+  // Initialize every scope vars here
+  $scope.invNo;
+  $scope.invDate;
+  $scope.invAmt;
+  $scope.custNum;
+  $scope.yes;
+  $scope.no;
+  $scope.itemCost;
+  $scope.fileList = [];
+  $scope.files=[];
+  $scope.files2=[];
+
+  $scope.invAmt = 1234.56;
 
 
-
-
-  $scope.clickProceed = function() {
-    if($("#proceedBox").prop('checked') == true) {
-      $scope.step = 2;
-    }else {
-      $('#proceedAlert').removeClass('hide');
-    }
-  };
 
   $scope.clickPrevious = function() {
     if($scope.step > 0) $scope.step -=1;
   };
 
-  $scope.clickChecked = function() {
-    if($scope.step = 4) {
-      if(!$("input[name='radio2']:checked").val()) {
-        alert("Nothing is checked");
-        return false;
-      }else {
-        alert('One of the button is checked');
-      }
-
-    }
-  }
 
   $scope.clickNext = function() {
     if($scope.step == 1) {
@@ -64,8 +32,6 @@ app.controller('bankCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
       $scope.step = 3;
     }else if($scope.step == 3) {
       $scope.step = 4;
-    }else if($scope.step == 4) {
-      $scope.step = 5;
     }
   };
 
@@ -73,98 +39,320 @@ app.controller('bankCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
     $scope.step = 1;
   }
 
-  $scope.purposeBank = [
-    {id:'0', value:'Select'}, {id: '1', value: 'Business transaction'}, {id: '2', value: 'Educational expense'}, {id: '3', value: 'Family expense'}, {id: '4', value: 'Others'}
+  $scope.getItem = [
+    {id:'0', value:'Select'},{id:'1', value:'Hotels'}, {id:'2', value:'Restaurant'}, {id:'3', value:'Cars/Rental'}, {id:'4', value:'Clothing/Fashin'}, {id:'5', value:'Tourism/Travel'}
   ];
 
-  $scope.selectedPurpose = $scope.purposeBank[0];
+  $scope.selectedItem = $scope.getItem[0];
 
-  $scope.changeClick = function(purpose) {
-    $scope.selectedPurpose = purpose;
+  $scope.changeClickItem = function(item) {
+    $scope.selectedItem = item;
+  };
+
+  $scope.countryList = [
+    {name: 'Select', code: ''},
+    {name: 'Afghanistan', code: 'AF'}, 
+    {name: 'Åland Islands', code: 'AX'}, 
+    {name: 'Albania', code: 'AL'}, 
+    {name: 'Algeria', code: 'DZ'}, 
+    {name: 'American Samoa', code: 'AS'}, 
+    {name: 'AndorrA', code: 'AD'}, 
+    {name: 'Angola', code: 'AO'}, 
+    {name: 'Anguilla', code: 'AI'}, 
+    {name: 'Antarctica', code: 'AQ'}, 
+    {name: 'Antigua and Barbuda', code: 'AG'}, 
+    {name: 'Argentina', code: 'AR'}, 
+    {name: 'Armenia', code: 'AM'}, 
+    {name: 'Aruba', code: 'AW'}, 
+    {name: 'Australia', code: 'AU'}, 
+    {name: 'Austria', code: 'AT'}, 
+    {name: 'Azerbaijan', code: 'AZ'}, 
+    {name: 'Bahamas', code: 'BS'}, 
+    {name: 'Bahrain', code: 'BH'}, 
+    {name: 'Bangladesh', code: 'BD'}, 
+    {name: 'Barbados', code: 'BB'}, 
+    {name: 'Belarus', code: 'BY'}, 
+    {name: 'Belgium', code: 'BE'}, 
+    {name: 'Belize', code: 'BZ'}, 
+    {name: 'Benin', code: 'BJ'}, 
+    {name: 'Bermuda', code: 'BM'}, 
+    {name: 'Bhutan', code: 'BT'}, 
+    {name: 'Bolivia', code: 'BO'}, 
+    {name: 'Bosnia and Herzegovina', code: 'BA'}, 
+    {name: 'Botswana', code: 'BW'}, 
+    {name: 'Bouvet Island', code: 'BV'}, 
+    {name: 'Brazil', code: 'BR'}, 
+    {name: 'British Indian Ocean Territory', code: 'IO'}, 
+    {name: 'Brunei Darussalam', code: 'BN'}, 
+    {name: 'Bulgaria', code: 'BG'}, 
+    {name: 'Burkina Faso', code: 'BF'}, 
+    {name: 'Burundi', code: 'BI'}, 
+    {name: 'Cambodia', code: 'KH'}, 
+    {name: 'Cameroon', code: 'CM'}, 
+    {name: 'Canada', code: 'CA'}, 
+    {name: 'Cape Verde', code: 'CV'}, 
+    {name: 'Cayman Islands', code: 'KY'}, 
+    {name: 'Central African Republic', code: 'CF'}, 
+    {name: 'Chad', code: 'TD'}, 
+    {name: 'Chile', code: 'CL'}, 
+    {name: 'China', code: 'CN'}, 
+    {name: 'Christmas Island', code: 'CX'}, 
+    {name: 'Cocos (Keeling) Islands', code: 'CC'}, 
+    {name: 'Colombia', code: 'CO'}, 
+    {name: 'Comoros', code: 'KM'}, 
+    {name: 'Congo', code: 'CG'}, 
+    {name: 'Congo, The Democratic Republic of the', code: 'CD'}, 
+    {name: 'Cook Islands', code: 'CK'}, 
+    {name: 'Costa Rica', code: 'CR'}, 
+    {name: 'Cote D\'Ivoire', code: 'CI'}, 
+    {name: 'Croatia', code: 'HR'}, 
+    {name: 'Cuba', code: 'CU'}, 
+    {name: 'Cyprus', code: 'CY'}, 
+    {name: 'Czech Republic', code: 'CZ'}, 
+    {name: 'Denmark', code: 'DK'}, 
+    {name: 'Djibouti', code: 'DJ'}, 
+    {name: 'Dominica', code: 'DM'}, 
+    {name: 'Dominican Republic', code: 'DO'}, 
+    {name: 'Ecuador', code: 'EC'}, 
+    {name: 'Egypt', code: 'EG'}, 
+    {name: 'El Salvador', code: 'SV'}, 
+    {name: 'Equatorial Guinea', code: 'GQ'}, 
+    {name: 'Eritrea', code: 'ER'}, 
+    {name: 'Estonia', code: 'EE'}, 
+    {name: 'Ethiopia', code: 'ET'}, 
+    {name: 'Falkland Islands (Malvinas)', code: 'FK'}, 
+    {name: 'Faroe Islands', code: 'FO'}, 
+    {name: 'Fiji', code: 'FJ'}, 
+    {name: 'Finland', code: 'FI'}, 
+    {name: 'France', code: 'FR'}, 
+    {name: 'French Guiana', code: 'GF'}, 
+    {name: 'French Polynesia', code: 'PF'}, 
+    {name: 'French Southern Territories', code: 'TF'}, 
+    {name: 'Gabon', code: 'GA'}, 
+    {name: 'Gambia', code: 'GM'}, 
+    {name: 'Georgia', code: 'GE'}, 
+    {name: 'Germany', code: 'DE'}, 
+    {name: 'Ghana', code: 'GH'}, 
+    {name: 'Gibraltar', code: 'GI'}, 
+    {name: 'Greece', code: 'GR'}, 
+    {name: 'Greenland', code: 'GL'}, 
+    {name: 'Grenada', code: 'GD'}, 
+    {name: 'Guadeloupe', code: 'GP'}, 
+    {name: 'Guam', code: 'GU'}, 
+    {name: 'Guatemala', code: 'GT'}, 
+    {name: 'Guernsey', code: 'GG'}, 
+    {name: 'Guinea', code: 'GN'}, 
+    {name: 'Guinea-Bissau', code: 'GW'}, 
+    {name: 'Guyana', code: 'GY'}, 
+    {name: 'Haiti', code: 'HT'}, 
+    {name: 'Heard Island and Mcdonald Islands', code: 'HM'}, 
+    {name: 'Holy See (Vatican City State)', code: 'VA'}, 
+    {name: 'Honduras', code: 'HN'}, 
+    {name: 'Hong Kong', code: 'HK'}, 
+    {name: 'Hungary', code: 'HU'}, 
+    {name: 'Iceland', code: 'IS'}, 
+    {name: 'India', code: 'IN'}, 
+    {name: 'Indonesia', code: 'ID'}, 
+    {name: 'Iran, Islamic Republic Of', code: 'IR'}, 
+    {name: 'Iraq', code: 'IQ'}, 
+    {name: 'Ireland', code: 'IE'}, 
+    {name: 'Isle of Man', code: 'IM'}, 
+    {name: 'Israel', code: 'IL'}, 
+    {name: 'Italy', code: 'IT'}, 
+    {name: 'Jamaica', code: 'JM'}, 
+    {name: 'Japan', code: 'JP'}, 
+    {name: 'Jersey', code: 'JE'}, 
+    {name: 'Jordan', code: 'JO'}, 
+    {name: 'Kazakhstan', code: 'KZ'}, 
+    {name: 'Kenya', code: 'KE'}, 
+    {name: 'Kiribati', code: 'KI'}, 
+    {name: 'Korea, Democratic People\'S Republic of', code: 'KP'}, 
+    {name: 'Korea, Republic of', code: 'KR'}, 
+    {name: 'Kuwait', code: 'KW'}, 
+    {name: 'Kyrgyzstan', code: 'KG'}, 
+    {name: 'Lao People\'S Democratic Republic', code: 'LA'}, 
+    {name: 'Latvia', code: 'LV'}, 
+    {name: 'Lebanon', code: 'LB'}, 
+    {name: 'Lesotho', code: 'LS'}, 
+    {name: 'Liberia', code: 'LR'}, 
+    {name: 'Libyan Arab Jamahiriya', code: 'LY'}, 
+    {name: 'Liechtenstein', code: 'LI'}, 
+    {name: 'Lithuania', code: 'LT'}, 
+    {name: 'Luxembourg', code: 'LU'}, 
+    {name: 'Macao', code: 'MO'}, 
+    {name: 'Macedonia, The Former Yugoslav Republic of', code: 'MK'}, 
+    {name: 'Madagascar', code: 'MG'}, 
+    {name: 'Malawi', code: 'MW'}, 
+    {name: 'Malaysia', code: 'MY'}, 
+    {name: 'Maldives', code: 'MV'}, 
+    {name: 'Mali', code: 'ML'}, 
+    {name: 'Malta', code: 'MT'}, 
+    {name: 'Marshall Islands', code: 'MH'}, 
+    {name: 'Martinique', code: 'MQ'}, 
+    {name: 'Mauritania', code: 'MR'}, 
+    {name: 'Mauritius', code: 'MU'}, 
+    {name: 'Mayotte', code: 'YT'}, 
+    {name: 'Mexico', code: 'MX'}, 
+    {name: 'Micronesia, Federated States of', code: 'FM'}, 
+    {name: 'Moldova, Republic of', code: 'MD'}, 
+    {name: 'Monaco', code: 'MC'}, 
+    {name: 'Mongolia', code: 'MN'}, 
+    {name: 'Montserrat', code: 'MS'}, 
+    {name: 'Morocco', code: 'MA'}, 
+    {name: 'Mozambique', code: 'MZ'}, 
+    {name: 'Myanmar', code: 'MM'}, 
+    {name: 'Namibia', code: 'NA'}, 
+    {name: 'Nauru', code: 'NR'}, 
+    {name: 'Nepal', code: 'NP'}, 
+    {name: 'Netherlands', code: 'NL'}, 
+    {name: 'Netherlands Antilles', code: 'AN'}, 
+    {name: 'New Caledonia', code: 'NC'}, 
+    {name: 'New Zealand', code: 'NZ'}, 
+    {name: 'Nicaragua', code: 'NI'}, 
+    {name: 'Niger', code: 'NE'}, 
+    {name: 'Nigeria', code: 'NG'}, 
+    {name: 'Niue', code: 'NU'}, 
+    {name: 'Norfolk Island', code: 'NF'}, 
+    {name: 'Northern Mariana Islands', code: 'MP'}, 
+    {name: 'Norway', code: 'NO'}, 
+    {name: 'Oman', code: 'OM'}, 
+    {name: 'Pakistan', code: 'PK'}, 
+    {name: 'Palau', code: 'PW'}, 
+    {name: 'Palestinian Territory, Occupied', code: 'PS'}, 
+    {name: 'Panama', code: 'PA'}, 
+    {name: 'Papua New Guinea', code: 'PG'}, 
+    {name: 'Paraguay', code: 'PY'}, 
+    {name: 'Peru', code: 'PE'}, 
+    {name: 'Philippines', code: 'PH'}, 
+    {name: 'Pitcairn', code: 'PN'}, 
+    {name: 'Poland', code: 'PL'}, 
+    {name: 'Portugal', code: 'PT'}, 
+    {name: 'Puerto Rico', code: 'PR'}, 
+    {name: 'Qatar', code: 'QA'}, 
+    {name: 'Reunion', code: 'RE'}, 
+    {name: 'Romania', code: 'RO'}, 
+    {name: 'Russian Federation', code: 'RU'}, 
+    {name: 'RWANDA', code: 'RW'}, 
+    {name: 'Saint Helena', code: 'SH'}, 
+    {name: 'Saint Kitts and Nevis', code: 'KN'}, 
+    {name: 'Saint Lucia', code: 'LC'}, 
+    {name: 'Saint Pierre and Miquelon', code: 'PM'}, 
+    {name: 'Saint Vincent and the Grenadines', code: 'VC'}, 
+    {name: 'Samoa', code: 'WS'}, 
+    {name: 'San Marino', code: 'SM'}, 
+    {name: 'Sao Tome and Principe', code: 'ST'}, 
+    {name: 'Saudi Arabia', code: 'SA'}, 
+    {name: 'Senegal', code: 'SN'}, 
+    {name: 'Serbia and Montenegro', code: 'CS'}, 
+    {name: 'Seychelles', code: 'SC'}, 
+    {name: 'Sierra Leone', code: 'SL'}, 
+    {name: 'Singapore', code: 'SG'}, 
+    {name: 'Slovakia', code: 'SK'}, 
+    {name: 'Slovenia', code: 'SI'}, 
+    {name: 'Solomon Islands', code: 'SB'}, 
+    {name: 'Somalia', code: 'SO'}, 
+    {name: 'South Africa', code: 'ZA'}, 
+    {name: 'South Georgia and the South Sandwich Islands', code: 'GS'}, 
+    {name: 'Spain', code: 'ES'}, 
+    {name: 'Sri Lanka', code: 'LK'}, 
+    {name: 'Sudan', code: 'SD'}, 
+    {name: 'Suriname', code: 'SR'}, 
+    {name: 'Svalbard and Jan Mayen', code: 'SJ'}, 
+    {name: 'Swaziland', code: 'SZ'}, 
+    {name: 'Sweden', code: 'SE'}, 
+    {name: 'Switzerland', code: 'CH'}, 
+    {name: 'Syrian Arab Republic', code: 'SY'}, 
+    {name: 'Taiwan, Province of China', code: 'TW'}, 
+    {name: 'Tajikistan', code: 'TJ'}, 
+    {name: 'Tanzania, United Republic of', code: 'TZ'}, 
+    {name: 'Thailand', code: 'TH'}, 
+    {name: 'Timor-Leste', code: 'TL'}, 
+    {name: 'Togo', code: 'TG'}, 
+    {name: 'Tokelau', code: 'TK'}, 
+    {name: 'Tonga', code: 'TO'}, 
+    {name: 'Trinidad and Tobago', code: 'TT'}, 
+    {name: 'Tunisia', code: 'TN'}, 
+    {name: 'Turkey', code: 'TR'}, 
+    {name: 'Turkmenistan', code: 'TM'}, 
+    {name: 'Turks and Caicos Islands', code: 'TC'}, 
+    {name: 'Tuvalu', code: 'TV'}, 
+    {name: 'Uganda', code: 'UG'}, 
+    {name: 'Ukraine', code: 'UA'}, 
+    {name: 'United Arab Emirates', code: 'AE'}, 
+    {name: 'United Kingdom', code: 'GB'}, 
+    {name: 'United States', code: 'US'}, 
+    {name: 'United States Minor Outlying Islands', code: 'UM'}, 
+    {name: 'Uruguay', code: 'UY'}, 
+    {name: 'Uzbekistan', code: 'UZ'}, 
+    {name: 'Vanuatu', code: 'VU'}, 
+    {name: 'Venezuela', code: 'VE'}, 
+    {name: 'Viet Nam', code: 'VN'}, 
+    {name: 'Virgin Islands, British', code: 'VG'}, 
+    {name: 'Virgin Islands, U.S.', code: 'VI'}, 
+    {name: 'Wallis and Futuna', code: 'WF'}, 
+    {name: 'Western Sahara', code: 'EH'}, 
+    {name: 'Yemen', code: 'YE'}, 
+    {name: 'Zambia', code: 'ZM'}, 
+    {name: 'Zimbabwe', code: 'ZW'} 
+  ];
+
+  $scope.selectedCountry = $scope.countryList[0];
+
+  $scope.changeClickCountry = function(country) {
+    $scope.selectedCountry = country;
+  };
+
+
+  $scope.saveData = function() {
+    console.log("save data works!");
+
+    localStorage.setItem('invNo', $scope.invNo);
+    localStorage.setItem('invDate', $scope.invDate);
+    localStorage.setItem('invAmt', $scope.invAmt);
+    localStorage.setItem('custNum', $scope.custNum);
+    localStorage.setItem('country', $scope.selectedCountry.name);
+    localStorage.setItem('yes', $scope.yes);
+    localStorage.setItem('no', $scope.no);
+    localStorage.setItem('itemCost', $scope.itemCost);
+    localStorage.setItem('item', $scope.selectedItem.value);
+    localStorage.setItem('fileList', $scope.fileList);
+
+    var savedData = localStorage.getItem('invNo');
+    var savedData = localStorage.getItem('invDate');
+    var savedData = localStorage.getItem('invAmt');
+    var savedData = localStorage.getItem('custNum');
+    var savedData = localStorage.getItem('country');
+    var savedData = localStorage.getItem('yes');
+    var savedData = localStorage.getItem('no');
+    var savedData = localStorage.getItem('itemCost');
+    var savedData = localStorage.getItem('item');
+    var savedData = localStorage.getItem('fileList');
+
+    $scope.savedData = savedData;
+
+    console.log($scope.savedData);
     
   };
 
-  $scope.getMoney = [
-    {id:'0', value:'Select'},{id:'1', value:'Salary'}, {id:'2', value:'Business'}, {id:'3', value:'Parents'}, {id:'4', value:'Allowances'}, {id:'5', value:'Others'}
-  ];
 
-  $scope.selectedMoney = $scope.getMoney[0];
-
-  $scope.changeClickMoney = function(money) {
-    $scope.selectedMoney = money;
-  };
-
-  $scope.hearAboutUs = [
-    {id:'0', value:'Select'}, {id:'1', value:'Social Media'}, {id:'2', value:'Brochure'}, {id:'3', value:'Radio'}, {id:'4', value:'TV'}
-  ];
-
-  $scope.selectedAbout = $scope.hearAboutUs[0];
-
-  $scope.changeClickAbout = function(about) {
-    $scope.selectedAbout = about;
-  };
-
-  $scope.jobList = [
-    {id:'0', value:'Select'}, {id:'1', value:'Accountant'}, {id:'2', value:'Engineer'}, {id:'3', value:'IT'}, {id:'4', value:'Marketing'}, {id:'5', value:'Others'}
-  ];
-
-  $scope.selectedJob = $scope.jobList[0];
-
-  $scope.changeClickJob = function(job) {
-    $scope.selectedJob = job;
-  };
-
-  $scope.getRandomAccNo = function() {
-    var bank_id="786", min = 123456789, max = 99999999;
-    var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-    var r_msg = new Array();
-
-    r_msg[0] = "Your application is accepted and your bank account number is:";
-    r_msg[1] = "Your application has been rejected. Please contact our local branch with this application number:" ;
-    $scope.randomAccNo = "786" + "-" + (Math.floor(Math.random() * (max - min + 1)) + min);
-    $scope.messages = Math.floor(r_msg.length * Math.random());
-    $scope.randomAppNo = charset.charAt(Math.floor(Math.random() * charset.length));
-  };
-
-  $scope.save = function() {
-
-  }
-
+  
   $scope.clickUpload = function(event) {
-    $scope.step = 5;
-    $scope.getRandomAccNo();
-
-    var modelData = [{
-        fName: $scope.fName,
-        midName: $scope.midName,
-        lastName: $scope.lastName,
-        homePhone: $scope.homePhone,
-        mobilePhone: $scope.mobilePhone,
-        email: $scope.email,
-        streetNumber: $scope.streetNumber,
-        routeAddress: $scope.routeAddress,
-        locality: $scope.locality,
-        state: $scope.state,
-        zipCode: $scope.zipCode,
-        country: $scope.country,
-        socialSecNum: $scope.socialSecNum,
-        empName: $scope.empName,
-        empAddress: $scope.empAddress,
-        streetNumber2: $scope.streetNumber2,
-        routeAddress2: $scope.routeAddress2,
-        locality2: $scope.locality2,
-        state2: $scope.state2,
-        zipCode2: $scope.zipCode2,
-        country2: $scope.country2,
-        mobilePhone2: $scope.mobilePhone2,
-        savings: $scope.savings,
-        deposit: $scope.deposit
-    }];
+    var modelData = {
+        invNo: $scope.invNo,
+        invDate: $scope.invDate,
+        invAmt: $scope.invAmt,
+        custNum: $scope.custNum,
+        product: $scope.radio2,
+        itemCost: $scope.itemCost,
+        item:  $scope.selectedItem.value,
+        fileList: $scope.fileList
+    };
+    modelData.push(JSON.parse(localStorage.getItem('session')));
+    localStorage.setItem('session', JSON.stringify(modelData));
     console.log(modelData);
   };
 
-  // Upload
+// Upload starts here
   $scope.$watch('files', function () {
       $scope.upload($scope.files);
   });
@@ -174,9 +362,8 @@ app.controller('bankCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
       }
   });
 
-  $scope.log = '';
 
-  $scope.upload = function (files) {
+  $scope.upload = function (files,containNo) {
       if (files && files.length) {
           for (var i = 0; i < files.length; i++) {
             var file = files[i];
@@ -184,24 +371,40 @@ app.controller('bankCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
               Upload.upload({
                   url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
                   data: {
-                    username: $scope.username,
+                    //username: $scope.username,
                     file: file  
                   }
+                  
               }).then(function (resp) {
                   $timeout(function() {
-                    $scope.result = resp.data;
+                    $scope.result = resp.data.result[0];
+                    
+                    if(containNo == 0){
+                      $scope.files.push($scope.result);
+                    }else{
+                      $scope.files2.push($scope.result);
+                    }
+                    console.log($scope.files);
+                    // push all files
+                    $scope.fileList.push($scope.result); 
                   });
               }, function (resp) {
                 if(resp.status > 0) {
                   $scope.errorMsg = resp.status + ': ' + resp.data;
                 }
               }, function (evt) {
-                   $scope.progressPercentage = parseInt(100.0 *
+
+                   if(containNo == 0 ){
+                    $scope.progressPercentage = parseInt(100.0 *
                       evt.loaded / evt.total);
+                   }else if(containNo == 1){
+                      $scope.progressPercentage2 = parseInt(100.0 *
+                      evt.loaded / evt.total);
+                   }
               });
             }
           }
       }
   };
-  // upload
+  // upload ends here
 }]);
