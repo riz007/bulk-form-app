@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="bulkApp" ng-controller="bulkCtrl">
+<html lang="en" ng-app="bulkApp" ng-controller="editCtrl" ng-init="initEdit()">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -87,23 +87,21 @@
                     <div ngf-drop ngf-select ng-model="files" class="drop-box text-center" 
                         ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
                         ngf-accept="'.pdf,.jpeg,.jpg,.png'"
-                        accept="'.pdf,.jpeg,.jpg,.png'"
-                        ngf-max-size="2MB" required
-                        ngf-pattern="'.pdf,.jpeg,.jpg,.png'"
-                        ngf-model-invalid="errorFile">Drop pdfs or images here or click to upload<br />
+                        accept="'.pdf,.jpeg,.jpg,.png'" 
+                        ngf-pattern="'.pdf,.jpeg,.jpg,.png'">Drop pdfs or images here or click to upload<br />
                     
                     <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-                    <!-- Files: -->
-                    <!-- Upload Progress: -->
+<!--                     Files: -->
+                    <ul>
+                        <li ng-repeat="f in files" style="font:smaller; font-weight: bold;">{{f.name}}</li>
+                    </ul>
+   <!--             Upload Progress: -->
                     <span class="progress" ng-show="progressPercentage >= 0">
                       <div style="width: {{progressPercentage}}%" ng-bind="progressPercentage + '%'">
                       </div>
                     </span>
                     <!-- drop file ends -->
                     </div>
-                    <ul>
-                        <li ng-repeat="f in files" style="font:smaller; font-weight: bold;">{{f.name}} <a href="#" class="delete-btn" ng-click="clickDelete($index)">X</a></li>
-                    </ul>
                   </div>
                 </div>
                 <div class="col-sm-3 col-md-3"></div>
@@ -210,74 +208,9 @@
               <div class="form-group">
                   <div class="pull-right">
                       <button class="btn btn-primary btn-decorate" name="save" value="Save" ng-click="saveData()" ng-disabled='invoiceForm.$invalid'>Save</button>
-                      <button class="btn btn-success btn-decorate margin-10L" name="next" value="upload" ng-click="addInvoice()" ng-disabled='invoiceForm.$invalid'>Upload</button>
+                      <button class="btn btn-success btn-decorate margin-10L" name="next" value="upload" ng-click="clickUpload()" ng-disabled='invoiceForm.$invalid'>Upload</button>
                   </div>
               </div>
-            </div>
-
-            <div class="container">
-              <h1 class="text-center">Approval Area</h1>
-              <div style="padding:20px 0px 60px 0px">
-                <span class="col-md-1" style="font-weight:bold">Search</span>
-                <span class="col-md-3">
-                <input type="text" class="form-control" ng-model="searchKeyword"/>
-                </span>
-              </div>
-              <div class="table-responsive">
-                <table class="table table-hover">
-                  <tr>
-                    <th>Invoice No.
-                    </th>
-                    <th>Invoice Date
-                    </th>
-                    <th>Invoice Amt.
-                    </th>
-                    <th>Customer No.
-                    </th>
-                    <th>Country
-                    </th>
-                    <th>Product
-                    </th>
-                    <th>Item Name
-                    </th>
-                    <th>Item Cost
-                    </th>
-                    <th>Uploaded file
-                    </th>
-                    <th>Action
-                    </th>
-                  </tr>
-                  <tr ng-repeat="data in modelData  | filter: searchKeyword ">
-                    <td>{{data.invNo}}
-                    </td>
-                    <td>{{data.invDate}}
-                    </td>
-                    <td>{{data.invAmt}}
-                    </td>
-                    <td>{{data.custNum}}
-                    </td>
-                    <td>{{data.country}}
-                    </td>
-                    <td>{{data.radio2}}
-                    </td>
-                    <td>{{data.item}}
-                    </td>
-                    <td>{{data.itemCost}}
-                    </td>
-                    <td>{{data.fileList}}
-                    </td>
-                    <td>
-                    <input type="button" value="Ok" class="btn btn-primary"/>  
-                    </td>
-                    <td>
-                    <input type="button" value="Remove" class="btn btn-danger" ng-click="removeInvoice(data.invNo)"/>
-                    </td>
-
-                  </tr>
-                </table>
-              </div>
-
-
             </div>
         </form>
     </div>

@@ -172,6 +172,9 @@ form .progress {
     text-align: center;
     font-size: 14px;
     background: #55b776;
-    /*width: 0;*/
+}
+
+.delete-btn {
+  margin-left: 5px;
 }
 

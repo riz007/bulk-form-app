@@ -4,24 +4,11 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
 
   $scope.step = 1;
 
-  $scope.modelData = [{
-    invNo: $scope.invNo,
-    invDate: $scope.invDate,
-    invAmt: $scope.invAmt,
-    custNum: $scope.custNum,
-    country: $scope.selectedCountry,
-    product: $scope.radio2,
-    itemCost: $scope.itemCost,
-    item:  $scope.selectedItem,
-    fileList: $scope.fileList
-  }];
-
   // Initialize every scope vars here
   $scope.invNo;
   $scope.invDate;
   $scope.invAmt;
   $scope.custNum;
-  // $scope.countryList;
   $scope.yes;
   $scope.no;
   $scope.itemCost;
@@ -31,6 +18,18 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
 
   $scope.invAmt = 1234.56;
 
+  $scope.initEdit = function(){
+      $scope.invNo = "1234";
+      $scope.invDate;
+      $scope.invAmt;
+      $scope.custNum;
+      $scope.yes;
+      $scope.no;
+      $scope.itemCost;
+      $scope.fileList = [];
+      $scope.files=[];
+      $scope.files2=[];
+    }
 
   $(document).ready(function() {
     // Retrieve the users name.
@@ -326,89 +325,56 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
   };
 
 
-  // $scope.saveData = function() {
-  //   console.log("save data works!");
+  $scope.saveData = function() {
+    console.log("save data works!");
 
-  //   localStorage.setItem('invNo', $scope.invNo);
-  //   localStorage.setItem('invDate', $scope.invDate);
-  //   localStorage.setItem('invAmt', $scope.invAmt);
-  //   localStorage.setItem('custNum', $scope.custNum);
-  //   localStorage.setItem('country', $scope.selectedCountry.name);
-  //   localStorage.setItem('yes', $scope.yes);
-  //   localStorage.setItem('no', $scope.no);
-  //   localStorage.setItem('itemCost', $scope.itemCost);
-  //   localStorage.setItem('item', $scope.selectedItem.value);
-  //   localStorage.setItem('fileList', $scope.fileList);
+    localStorage.setItem('invNo', $scope.invNo);
+    localStorage.setItem('invDate', $scope.invDate);
+    localStorage.setItem('invAmt', $scope.invAmt);
+    localStorage.setItem('custNum', $scope.custNum);
+    localStorage.setItem('country', $scope.selectedCountry.name);
+    localStorage.setItem('yes', $scope.yes);
+    localStorage.setItem('no', $scope.no);
+    localStorage.setItem('itemCost', $scope.itemCost);
+    localStorage.setItem('item', $scope.selectedItem.value);
+    localStorage.setItem('fileList', $scope.fileList);
 
-  //   var savedData = localStorage.getItem('invNo');
-  //   var savedData = localStorage.getItem('invDate');
-  //   var savedData = localStorage.getItem('invAmt');
-  //   var savedData = localStorage.getItem('custNum');
-  //   var savedData = localStorage.getItem('country');
-  //   var savedData = localStorage.getItem('yes');
-  //   var savedData = localStorage.getItem('no');
-  //   var savedData = localStorage.getItem('itemCost');
-  //   var savedData = localStorage.getItem('item');
-  //   var savedData = localStorage.getItem('fileList');
+    var savedData = localStorage.getItem('invNo');
+    var savedData = localStorage.getItem('invDate');
+    var savedData = localStorage.getItem('invAmt');
+    var savedData = localStorage.getItem('custNum');
+    var savedData = localStorage.getItem('country');
+    var savedData = localStorage.getItem('yes');
+    var savedData = localStorage.getItem('no');
+    var savedData = localStorage.getItem('itemCost');
+    var savedData = localStorage.getItem('item');
+    var savedData = localStorage.getItem('fileList');
 
-  //   $scope.savedData = savedData;
+    $scope.savedData = savedData;
 
-  //   console.log($scope.savedData);
+    console.log($scope.savedData);
     
-  // };
+  };
 
+
+  
   $scope.clickUpload = function(event) {
-
-    $scope.addInvoice();
-
     var modelData = [{
         invNo: $scope.invNo,
         invDate: $scope.invDate,
         invAmt: $scope.invAmt,
         custNum: $scope.custNum,
-        country: $scope.selectedCountry.name,
         product: $scope.radio2,
         itemCost: $scope.itemCost,
         item:  $scope.selectedItem.value,
         fileList: $scope.fileList
-
     }];
-
     modelData.push(JSON.parse(localStorage.getItem('session')));
     localStorage.setItem('session', JSON.stringify(modelData));
     console.log(modelData);
   };
 
-  $scope.addInvoice = function() {
-    $scope.modelData.push({'invNo':$scope.invNo, 'invDate':$scope.invDate, 'invAmt':$scope.invAmt, 'custNum':$scope.custNum, 'country':$scope.selectedCountry.name, 'product':$scope.radio2, 'itemCost':$scope.itemCost, 'item':$scope.selectedItem.value, 'fileList': $scope.fileList[0].name});
-    
-    invNo='';
-    invDate='';
-    invAmt='';
-    custNum='';
-    selectedCountry='';
-    radio2='';
-    itemCost='';
-    selectedItem='';
-    fileList='';
-  };
-
-  $scope.removeInvoice = function(invNo) {
-    var index = -1;
-    var comArr = eval($scope.modelData);
-    for(var i =0; i<comArr.length; i++) {
-      if(comArr[i].invNo === invNo) {
-        index = i;
-        break;
-      }
-
-      if(index === -1) {
-        alert("Something gone wrong");
-      }
-      $scope.modelData.splice(index,1);
-  }
- };
-
+  $scope.set
 
 // Upload starts here
   $scope.$watch('files', function () {
@@ -420,13 +386,14 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
       }
   });
 
+
   $scope.upload = function (files,containNo) {
       if (files && files.length) {
           for (var i = 0; i < files.length; i++) {
             var file = files[i];
             if (!file.$error) {
               Upload.upload({
-                  url: 'https://angular-file-upload-cors-srv.appspot.com/upload', //sample WS to upload files. It may take some time to upload files
+                  url: 'https://angular-file-upload-cors-srv.appspot.com/upload',
                   data: {
                     //username: $scope.username,
                     file: file  
@@ -464,10 +431,4 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
       }
   };
   // upload ends here
-
-  //Delete uploaded file
-  $scope.clickDelete = function(idx) {
-    $scope.files.splice(idx, 1);
-  };
-
 }]);
