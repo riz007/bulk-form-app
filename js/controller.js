@@ -2,8 +2,6 @@ var app = angular.module('bulkApp', ['ngFileUpload']);
 
 app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upload, $timeout) {
 
-  $scope.step = 1;
-
   $scope.modelData = [{
     invNo: $scope.invNo,
     invDate: $scope.invDate,
@@ -33,21 +31,9 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
   $scope.itemCost = 1234.56;
 
 
-  $(document).ready(function() {
-    // Retrieve the users name.
-    var name = localStorage.getItem('invNo');
-
-    if (name != "undefined" || name != "null") {
-      document.getElementById('invNo').innerHTML =  name ;
-    } else {
-      document.getElementById('invNo').innerHTML = "";
-    }
-  });
-
   $scope.clickPrevious = function() {
     if($scope.step > 0) $scope.step -=1;
   };
-
 
   $scope.clickNext = function() {
     if($scope.step == 1) {
@@ -326,6 +312,25 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
     $scope.selectedCountry = country;
   };
 
+  $scope.checkUncheckHeader = function() {
+    $scope.isAllChecked = true;
+    for(var i = 0; i<$scope.modelData.length; i++) {
+      if(!$scope.modelData[i].Selected) {
+        $scope.isAllChecked = false;
+        break;
+      }
+    };
+  };
+
+  $scope.checkUncheckHeader();
+
+  $scope.CheckUncheckAll = function() {
+    for(var i = 0; i < $scope.modelData.length; i++) {
+      $scope.modelData[i].Selected = $scope.isAllChecked;
+    }
+  };
+
+
   $scope.clickUpload = function(event) {
 
     $scope.addInvoice();
@@ -351,6 +356,7 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
   function checkFile() {
     var returnIs = false;
     if($scope.files.length < 1) {
+      $(window).scrollTop($('.thumbnail').position().top);
       returnIs = true;
       $('.thumbnail').addClass('required-input');
     }else {
@@ -359,6 +365,7 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
 
     if($scope.invNo === '' || $scope.invNo === undefined) {
       returnIs = true;
+      $(window).scrollTop($('#invNo').position().top);
       $('input[name=invNo]').addClass('required-input');
     }else {
       $('input[name=invNo]').removeClass('required-input');
@@ -422,26 +429,51 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
     selectedItem='';
     fileList='';
 
-    $scope.modelData.push(JSON.parse(localStorage.getItem('session')));
-    localStorage.setItem('session', JSON.stringify($scope.modelData));
-    console.log($scope.modelData);
   };
 
   $scope.removeInvoice = function(invNo) {
     var index = -1;
     var comArr = eval($scope.modelData);
     for(var i =0; i<comArr.length; i++) {
-      if(comArr[i].invNo === invNo) {
+      if(comArr[i].invNo === invNo ) {
         index = i;
         break;
       }
 
       if(index === -1) {
-        alert("File deleted");
+        alert("Invoice Deleted");
       }
       $scope.modelData.splice(index,1);
   }
  };
+
+ $scope.deleteBulkInvoice = function (invNo) {
+  $scope.modelData.forEach(function(data) {
+      if(data.checked) {
+        $scope.modelData.$remove(data);
+      }
+  });
+ };
+
+ $scope.approveInvoice = function(invNo) {
+    alert("Invoice Approved");
+ };
+
+ $scope.rejectInvoice = function(invNo) {
+  var index = -1;
+  var comArr = eval($scope.modelData);
+  for(var i =0; i<comArr.length; i++) {
+    if(comArr[i].invNo === invNo) {
+      index = i;
+      break;
+    }
+
+    if(index === -1) {
+      alert("Invoice Rejected");
+    }
+    $scope.modelData.splice(index,1);
+  }
+};
 
  // $scope.getInvoice = function(data) {
  //  if(data.invNo === $scope.modelData.selected.invNo) return 'edit';

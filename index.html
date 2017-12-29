@@ -50,7 +50,7 @@
 
     <div class="container">
         <form id="invoiceForm" class="form-horizontal" name="invoiceForm" novalidate="">
-            <div class="form-group" ng-class="step === 1 ? 'content-step step1' : 'content-step step1 hide'">
+            <div class="form-group">
               <div class="text-center">
                 <h1>User Section</h1>
                 <p>Please fill all the required fields carefully.</p>
@@ -199,7 +199,7 @@
              <div class="form-group">
                   <label class="col-xs-3 control-label"><span class="required">*</span>Item cost</label>
                   <div class="col-xs-6 col-sm-6 col-md-4" ng-class="{ 'has-error' : invoiceForm.itemCost.$invalid && !invoiceForm.itemCost.$pristine }">
-                      <input type="text" class="form-control" name="itemCost" ng-model="itemCost" placeholder="Item cost" required="true" ng-disabled="radio2 != 0"  />
+                      <input type="number" class="form-control" name="itemCost" ng-model="itemCost" placeholder="Item cost" required="true" ng-disabled="radio2 != 0"  />
                   Default currency symbol (฿): <span id="currency-default">{{itemCost | currency: "฿"}}</span><br>
                   </div>
                   <span ng-show="invoiceForm.itemCost.$invalid && !invoiceForm.itemCost.$pristine" class="required-text">Cost is required.</span>
@@ -217,14 +217,19 @@
               <div style="padding:20px 0px 60px 0px">
                 <span class="col-md-1" style="font-weight:bold">Search</span>
                 <span class="col-md-3">
-                <input type="text" class="form-control" ng-model="searchKeyword"/>
+                <input type="text" class="form-control" placeholder="customers, due dates, countries, products" ng-model="searchKeyword"/>
                 </span>
                 <p>Search specific invoice from specific customers, amounts, due dates, countries and products.</p>
               </div>
+              <p>Click checkbox to select files and click remove button to delete multiple files.</p>
               <div class="table-bordered table-responsive text-center">
                 <table class="table table-bordered">
                   <tr>
-                    <th>Inv. No.
+                    <th>
+                      <label>
+                        <input type="checkbox" ng-model="isAllChecked" ng-change="CheckUncheckAll()" />
+                        Inv. No.
+                      </label>
                     </th>
 
                     <th>Inv. Date
@@ -251,8 +256,12 @@
                     <th>Action
                     </th>
                   </tr>
-                  <tr ng-repeat="data in modelData  | filter: searchKeyword ">
-                    <td>{{data.invNo}}
+                  <tr ng-repeat="data in modelData  | filter: searchKeyword">
+                    <td>
+                      <label for='chkInvoice_{{data.invNo}}'>
+                        <input id="chkInvoice_{{data.invNo}}" type="checkbox" ng-model="data.Selected" ng-change="checkUncheckHeader()" />
+                        {{data.invNo}}
+                      </label>
                     </td>
 
                     <td>{{data.invDate}}
@@ -277,10 +286,12 @@
                     </td>
 
                     <td>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="Approve"><i class="fa fa-check fa-2x" aria-hidden="true" style="color: green; padding-right: 5px;"></i></a>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="Reject"><i class="fa fa-ban fa-2x" aria-hidden="true" style="color: orange; padding-right: 5px;"></i></a>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true" style="color: #286090; padding-right: 5px;"></i></a>
-                    <a href="#" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true" ng-click="removeInvoice(data.invNo)" style="color: red; padding-right: 5px;"></i></a>
+
+                    <a href="#" data-toggle="tooltip" data-placement="top" title="Approve"><i class="fa fa-check fa-2x" aria-hidden="true" style="color: green; padding-right: 5px;" ng-click="approveInvoice()"></i></a>
+                    <a href="#" data-toggle="tooltip" data-placement="top" title="Reject"><i class="fa fa-ban fa-2x" aria-hidden="true" style="color: orange; padding-right: 5px;" ng-click="rejectInvoice(data.invNo)"></i></a>
+                    <a href="#" data-toggle="tooltip" data-placement="top" title="Remove"><i class="fa fa-trash-o fa-2x" aria-hidden="true" style="color: #286090; padding-right: 5px;" ng-click="deleteBulkInvoice(data)"></i></a>
+                    <a href="#" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-times fa-2x" aria-hidden="true" ng-click="removeInvoice(data.invNo)" style="color: red; padding-right: 5px;"></i></a>
+                    
                     </td>
 
                   </tr>

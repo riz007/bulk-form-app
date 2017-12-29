@@ -182,6 +182,7 @@ form .progress {
 
 .delete-btn {
   margin-left: 5px;
+  color: red;
 }
 
 @media only screen and (max-width: 768px) {
