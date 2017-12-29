@@ -30,6 +30,7 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
   $scope.files2=[];
 
   $scope.invAmt = 1234.56;
+  $scope.itemCost = 1234.56;
 
 
   $(document).ready(function() {
@@ -325,38 +326,6 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
     $scope.selectedCountry = country;
   };
 
-
-  // $scope.saveData = function() {
-  //   console.log("save data works!");
-
-  //   localStorage.setItem('invNo', $scope.invNo);
-  //   localStorage.setItem('invDate', $scope.invDate);
-  //   localStorage.setItem('invAmt', $scope.invAmt);
-  //   localStorage.setItem('custNum', $scope.custNum);
-  //   localStorage.setItem('country', $scope.selectedCountry.name);
-  //   localStorage.setItem('yes', $scope.yes);
-  //   localStorage.setItem('no', $scope.no);
-  //   localStorage.setItem('itemCost', $scope.itemCost);
-  //   localStorage.setItem('item', $scope.selectedItem.value);
-  //   localStorage.setItem('fileList', $scope.fileList);
-
-  //   var savedData = localStorage.getItem('invNo');
-  //   var savedData = localStorage.getItem('invDate');
-  //   var savedData = localStorage.getItem('invAmt');
-  //   var savedData = localStorage.getItem('custNum');
-  //   var savedData = localStorage.getItem('country');
-  //   var savedData = localStorage.getItem('yes');
-  //   var savedData = localStorage.getItem('no');
-  //   var savedData = localStorage.getItem('itemCost');
-  //   var savedData = localStorage.getItem('item');
-  //   var savedData = localStorage.getItem('fileList');
-
-  //   $scope.savedData = savedData;
-
-  //   console.log($scope.savedData);
-    
-  // };
-
   $scope.clickUpload = function(event) {
 
     $scope.addInvoice();
@@ -379,6 +348,67 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
     console.log(modelData);
   };
 
+  function checkFile() {
+    var returnIs = false;
+    if($scope.files.length < 1) {
+      returnIs = true;
+      $('.thumbnail').addClass('required-input');
+    }else {
+      $('.thumbnail').removeClass('required-input');
+    }
+
+    if($scope.invNo === '' || $scope.invNo === undefined) {
+      returnIs = true;
+      $('input[name=invNo]').addClass('required-input');
+    }else {
+      $('input[name=invNo]').removeClass('required-input');
+    }
+
+    if($scope.invDate === '' || $scope.invDate === undefined) {
+      returnIs = true;
+      $('input[name=invDate]').addClass('required-input');
+    }else {
+      $('input[name=invDate]').removeClass('required-input');
+    }
+
+    if($scope.invAmt === '' || $scope.invAmt === undefined) {
+      returnIs = true;
+      $('input[name=invAmt]').addClass('required-input');
+    }else {
+      $('input[name=invAmt]').removeClass('required-input');
+    }
+
+    if($scope.custNum === '' || $scope.custNum === undefined) {
+      returnIs = true;
+      $('input[name=custNum]').addClass('required-input');
+    }else {
+      $('input[name=custNum]').removeClass('required-input');
+    }
+
+    if(!$("input[name='radio2']:checked").val()) {
+      returnIs = true;
+      $('#chooseProduct').removeClass('hide');
+    } else {
+      $('#chooseProduct').addClass('hidden');
+    }
+
+    if($scope.itemCost === '' || $scope.itemCost === undefined) {
+      returnIs = true;
+      $('input[name=itemCost]').addClass('required-input');
+    }else {
+      $('input[name=itemCost]').removeClass('required-input');
+    }
+
+    return returnIs;
+  }
+
+  $scope.clickToUpload = function() {
+    if(!checkFile()) {
+      $('#invoiceForm')[0].reset();
+      $scope.addInvoice();
+    }
+  };
+ 
   $scope.addInvoice = function() {
     $scope.modelData.push({'invNo':$scope.invNo, 'invDate':$scope.invDate, 'invAmt':$scope.invAmt, 'custNum':$scope.custNum, 'country':$scope.selectedCountry.name, 'product':$scope.radio2, 'itemCost':$scope.itemCost, 'item':$scope.selectedItem.value, 'fileList': $scope.fileList[0].name});
     
@@ -391,6 +421,10 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
     itemCost='';
     selectedItem='';
     fileList='';
+
+    $scope.modelData.push(JSON.parse(localStorage.getItem('session')));
+    localStorage.setItem('session', JSON.stringify($scope.modelData));
+    console.log($scope.modelData);
   };
 
   $scope.removeInvoice = function(invNo) {
@@ -403,11 +437,20 @@ app.controller('bulkCtrl', ['$scope', 'Upload', '$timeout', function($scope, Upl
       }
 
       if(index === -1) {
-        alert("Something gone wrong");
+        alert("File deleted");
       }
       $scope.modelData.splice(index,1);
   }
  };
+
+ // $scope.getInvoice = function(data) {
+ //  if(data.invNo === $scope.modelData.selected.invNo) return 'edit';
+ //  else return 'display';
+ // }
+
+ // $scope.editInvoice = function (data) {
+ //    $scope.
+ // };
 
 
 // Upload starts here
